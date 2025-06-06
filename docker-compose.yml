@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=devops-containers-db
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=root
+    networks:
+      - first-network
+    volumes:
+      - db:/var/lib/mysql
+  
+  api-rocket:
+    build:
+      context: .
+    container_name: api-rocket
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql
+    networks:
+      - first-network
+
+
+networks:
+  first-network:
+    name: first-network
+    external: true
+    driver: bridge
+
+volumes:
+  db:
